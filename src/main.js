@@ -5,6 +5,12 @@ Vue.use(Router);
 import Element from 'element-ui';
 import './element-variables.scss';
 Vue.use(Element);
+
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+ 
+Vue.use(VueAxios, axios)
+
 import App from './App.vue';
 
 Vue.config.productionTip = false;
