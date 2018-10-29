@@ -35,6 +35,28 @@ import { post } from "../../util/apiUtil.js";
 export default {
     name: "indexNews",
     data() {
+      var validatePhone = (rule, value, callback) => {
+        if (value !== '') {
+          var tester = new RegExp(/^1[3|4|5|7|8]\d{9}$/);
+          if(!tester.test(value)){
+            callback(new Error("请输入正确的手机号码"));
+          }
+        }
+
+         callback();
+      };
+
+      var validateEmail = (rule, value, callback) => {
+        if (value !== '') {
+          var tester = new RegExp(/^[A-Za-z0-9._%-]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,4}$/);
+          if(!tester.test(value)){
+            callback(new Error("请输入正确的EMail地址"));
+          }
+        }
+
+         callback();
+      };
+
         return {
         ruleForm: {
           title: '',
@@ -52,6 +74,12 @@ export default {
           content: [
             { required: true, message: '请填写留言内容', trigger: 'blur' },
              { min: 1, max: 1000, message: '长度在 1 到 1000 个字符', trigger: 'blur' }
+          ],
+           submitEmail: [
+            { validator: validateEmail, trigger: 'blur' }
+          ],
+           submitPhoneNumber: [
+            { validator: validatePhone, trigger: 'blur' }
           ]
         }
       };
