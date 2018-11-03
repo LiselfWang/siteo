@@ -1,5 +1,5 @@
 <template>
-    <el-card shadow="hover" class="card">
+    <el-card shadow="hover" class="card" v-loading="isSubmiting" id="feedbackBox" >
         <div slot="header">
             <span>留言板</span>
         </div>
@@ -36,7 +36,7 @@ export default {
     name: "indexNews",
     data() {
       var validatePhone = (rule, value, callback) => {
-        if (value !== '') {
+        if (value) {
           var tester = new RegExp(/^1[3|4|5|7|8]\d{9}$/);
           if(!tester.test(value)){
             callback(new Error("请输入正确的手机号码"));
@@ -47,7 +47,7 @@ export default {
       };
 
       var validateEmail = (rule, value, callback) => {
-        if (value !== '') {
+        if (value) {
           var tester = new RegExp(/^[A-Za-z0-9._%-]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,4}$/);
           if(!tester.test(value)){
             callback(new Error("请输入正确的EMail地址"));
@@ -58,6 +58,7 @@ export default {
       };
 
         return {
+          isSubmiting:false,
         ruleForm: {
           title: '',
           type: '',
@@ -86,8 +87,10 @@ export default {
     },
     methods: {
       submitForm(formName) {
+        
         this.$refs[formName].validate((valid) => {
           if (valid) {
+              this.isSubmiting = true;
               post("feedback/add", {
                 title:this.ruleForm.title,
                 content:this.ruleForm.content,
@@ -102,7 +105,14 @@ export default {
                   });
 
                   this.resetForm("ruleForm");
+                }else{
+                  this.$message({
+                    message:result.messages,
+                    type: 'error'
+                  });
                 }
+
+                this.isSubmiting = false;
               })
             
           } else {
